@@ -1,0 +1,66 @@
+// resize the canvas to match the window
+function setsize(){
+    var c_div = document.getElementById('canvas_container');
+    the_canvas.width  = c_div.clientWidth;
+    the_canvas.height = c_div.clientHeight;
+}
+
+// grab a 100-pixel tall horizontal strip and move it left or right by 50px
+function effect_tearing(){
+    var pos_y  = parseInt(Math.random()*(the_canvas.height-100));
+    var cwidth = the_canvas.width;
+
+    the_canvas.getContext('2d').drawImage(
+            the_canvas                         ,
+            0                                  ,
+            pos_y                              ,
+            cwidth                             ,
+            100                                ,
+            (parseInt(Math.random()*2)*100)-50 , // either 50 or -50
+            pos_y                              ,
+            cwidth                             ,
+            100                                );
+}
+
+// add an image to somewhere inside the canvas
+function add_image(){
+    var rnd_pic = document.getElementById('pic'+parseInt(Math.random()*18));
+
+    the_canvas.getContext('2d').drawImage(
+            rnd_pic                                                    ,
+            parseInt(Math.random()*(the_canvas.width-rnd_pic.width))   ,
+            parseInt(Math.random()*(the_canvas.height-rnd_pic.height)) );
+}
+
+// rewind and play one of the audio elements
+function do_sound(){
+    var rnd_snd = document.getElementById('snd'+parseInt(Math.random()*7));
+    rnd_snd.currentTime = 0;
+    rnd_snd.play();
+}
+
+// runs several times every second
+function slowloop(){
+    if (document.hidden === true) {return;}
+    if(Math.random() < 0.2) {effect_tearing();}
+    add_image();
+    do_sound();
+}
+
+// runs every frame
+function fastloop(){
+    //window.requestAnimationFrame(fastloop);
+    // todo. later. probably.
+}
+
+function sw_init(){
+    the_canvas = document.getElementById('the_canvas');
+    window.setInterval(slowloop,100);
+    fastloop();
+}
+
+var the_canvas; //global
+
+window.addEventListener('load',sw_init);
+window.addEventListener('load',setsize);
+window.addEventListener('resize',setsize);
